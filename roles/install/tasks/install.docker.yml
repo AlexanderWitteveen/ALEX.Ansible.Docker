@@ -6,4 +6,43 @@
     state: present
   vars:
     packages:
-    - apt-transport-https
+    - ca-certificates 
+    - curl
+    - gnupg
+
+- name: Add an Apt signing key from Docker
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+    keyring: /etc/apt/trusted.gpg.d/docker-apt-key.gpg
+
+- name: get release name
+  shell: lsb_release -cs
+  args:
+    executable: /bin/bash
+  register: os_release
+  changed_when: false
+
+- name: Add Docker repository (intel)
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ os_release.stdout }} stable
+    state: present
+  when: ansible_facts.architecture == "x86_64"
+
+- name: Add Docker repository (arm)
+  apt_repository:
+    repo: deb [arch=arm64] https://download.docker.com/linux/ubuntu {{ os_release.stdout }} stable
+    state: present
+  when: ansible_facts.architecture == "aarch64"
+
+- name: Install a list of packages
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+    - apache2-utils
