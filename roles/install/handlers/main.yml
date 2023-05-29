@@ -1,0 +1,11 @@
+---
+
+#- name: restart docker
+#  command: gitlab-runner restart
+#  register: docker_restart
+#  failed_when: gitlab_restart_handler_failed_when | bool
+
+- name: restart docker
+  ansible.builtin.service:
+    name: docker
+    state: restarted

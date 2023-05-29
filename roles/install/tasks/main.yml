@@ -1,3 +1,5 @@
 ---
 
-- include_tasks: install.docker.yml
+- include_tasks: installdocker.yml
+
+- include_tasks: configuredocker.yml
