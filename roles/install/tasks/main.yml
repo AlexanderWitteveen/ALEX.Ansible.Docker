@@ -9,16 +9,16 @@
     - ca-certificates 
     - curl
     - gnupg
-    - lsb-release
     ansible_connection: ssh
     ansible_host: "{{ prop_ipaddress }}"
   become: true
 
 - name: Add an Apt signing key from Docker
   apt_key:
-    url: https://download.docker.com/linux/ubuntu/gpg
+    url: https://download.docker.com/linux/debian/gpg
     state: present
     keyring: /etc/apt/trusted.gpg.d/docker-apt-key.gpg
+  when: prop_os == "deb11"
   vars:
     ansible_connection: ssh
     ansible_host: "{{ prop_ipaddress }}"
