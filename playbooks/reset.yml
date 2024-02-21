@@ -2,14 +2,11 @@
 
 - name: "Playbook: Reset Docker"
   hosts: "{{ args_host }}"
-  gather_facts: true
-  become: true
-  vars:
-    ansible_host: "{{ args_ipaddress }}"
+  gather_facts: false
 
   vars_files:
     - /etc/ansible/inventory/vars.yml
 
-  roles:
-    - alex.docker.reset
-    
+  tasks:
+    - ansible.builtin.include_role:
+        name: alex.docker.reset
